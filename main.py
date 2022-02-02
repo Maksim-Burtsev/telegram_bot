@@ -36,13 +36,13 @@ def start(message):
 
             last_post_text = text
             videos_for_delete.extend(videos)
-            time.sleep(3600)
+            time.sleep(1000)
 
         else:
             if videos_for_delete and len(videos_for_delete) > 1:
                 delete_videos(videos_for_delete[:-1])
                 videos_for_delete = videos_for_delete[-1:]
-            time.sleep(3600)
+            time.sleep(1000)
 
 
 bot.polling(non_stop=True)
