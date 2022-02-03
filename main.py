@@ -3,16 +3,10 @@ from telebot import types
 import time
 import requests
 from parse_and_delete_f import main, is_new_post_piblished, delete_videos
-
-TOKEN = '5291208463:AAEokJAK6ISX7TiwJ4pBYZKoShUR3kKP3AI'
-
-
-bot = telebot.TeleBot(TOKEN)
+from threading import Thread
 
 
-@bot.message_handler(commands=['start'])
-def start(message):
-
+def thread_handler(message):
     bot.send_message(message.chat.id, 'Привет, сейчас вышлю последний пост!')
     last_post_text = ''
     videos_for_delete = []
@@ -22,7 +16,7 @@ def start(message):
             medias = []
 
             bot.send_message(message.chat.id, text)
-            
+
             if photos_list:
                 for i in photos_list:
                     medias.append(types.InputMediaPhoto(i))
@@ -43,6 +37,18 @@ def start(message):
                 delete_videos(videos_for_delete[:-1])
                 videos_for_delete = videos_for_delete[-1:]
             time.sleep(1000)
+
+
+TOKEN = '5291208463:AAEokJAK6ISX7TiwJ4pBYZKoShUR3kKP3AI'
+
+
+bot = telebot.TeleBot(TOKEN)
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    t = Thread(target=thread_handler, args=(message,))
+    t.start()
 
 
 bot.polling(non_stop=True)
