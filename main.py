@@ -4,6 +4,19 @@ import time
 import requests
 from parse_and_delete_f import main, is_new_post_piblished, delete_videos
 from threading import Thread
+from config import TOKEN
+
+TXT = ""
+PHOTO_LIST = []
+VIDEOS = []
+
+
+def update_data():
+    global TXT, PHOTO_LIST, VIDEOS
+
+    while True:
+        TXT, PHOTO_LIST, VIDEOS = main()
+        time.sleep(60)
 
 
 def thread_handler(message):
@@ -11,8 +24,8 @@ def thread_handler(message):
     last_post_text = ''
     videos_for_delete = []
     while True:
-        if is_new_post_piblished(last_post_text):
-            text, photos_list, videos = main()
+        text, photos_list, videos = TXT, PHOTO_LIST, VIDEOS
+        if TXT != last_post_text:
             medias = []
 
             bot.send_message(message.chat.id, text)
@@ -30,19 +43,19 @@ def thread_handler(message):
 
             last_post_text = text
             videos_for_delete.extend(videos)
-            time.sleep(1000)
+            time.sleep(60)
 
         else:
             if videos_for_delete and len(videos_for_delete) > 1:
                 delete_videos(videos_for_delete[:-1])
                 videos_for_delete = videos_for_delete[-1:]
-            time.sleep(1000)
-
-
-TOKEN = '5291208463:AAEokJAK6ISX7TiwJ4pBYZKoShUR3kKP3AI'
+            time.sleep(60)
 
 
 bot = telebot.TeleBot(TOKEN)
+
+data_t = Thread(target=update_data)
+data_t.start()
 
 
 @bot.message_handler(commands=['start'])

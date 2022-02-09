@@ -1,10 +1,11 @@
 import requests
 import os
 import youtube_dl
+from config import VK_TOKEN
 
 
 def main():
-    TOKEN = '75068529750685297506852958757c7f22775067506852914ebcb3cdcaa45f57558dc20'
+    TOKEN = VK_TOKEN
 
     VERSION = 5.131
     DOMAIN = 'biobezpredel'
@@ -62,7 +63,7 @@ def main():
 
 
 def is_new_post_piblished(last_post):
-    TOKEN = '75068529750685297506852958757c7f22775067506852914ebcb3cdcaa45f57558dc20'
+    TOKEN = VK_TOKEN
 
     VERSION = 5.131
     DOMAIN = 'biobezpredel'
