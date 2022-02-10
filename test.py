@@ -5,10 +5,8 @@ import datetime
 import os
 import telebot
 from telebot import types
-import time
 from config import TEST_TOKEN
 
-from main import VIDEOS
 
 VIDEOS_FOR_DELETE = []
 
@@ -61,11 +59,12 @@ def get_day_from_unix(time: str):
     return int(datetime.datetime.utcfromtimestamp(int(time)).strftime('%Y-%m-%d %H:%M:%S')[8:10])
 
 
-def is_post_today(day: int):
+def is_post_today(date):
     """Проверяет, совпадает ли дата поста с текущей"""
-
-    return (datetime.datetime.now().day >= day)
-
+    if str(datetime.datetime.now().day) == str(date)[8:10]:
+        return True
+    return int(datetime.datetime.now().day)-1 == int(str(date)[8:10]) and \
+        int(str(date)[11:13]) in [22, 23]
 
 def main():
     TEXT, PHOTOS, VIDEOS = [], [], []
@@ -79,7 +78,7 @@ def main():
 
     data = responce.json()['response']['items']
     for i in range(1, 5):
-        date = int(datetime.datetime.utcfromtimestamp(int(data[i]['date']+3*60*60)).strftime('%Y-%m-%d %H:%M:%S')[8:10]) 
+        date = datetime.datetime.utcfromtimestamp(int(data[i]['date']+3*60*60))
         
         # if (int(time.time())-int(data[i]['date']))/60/60 <= 24:
 
@@ -126,16 +125,17 @@ def start(message):
                 video = open(i, 'rb')
                 bot.send_video(message.chat.id, video,
                                 supports_streaming=True)
-        # if VIDEOS_FOR_DELETE:
-        #     try:
-        #         delete_videos(VIDEOS_FOR_DELETE)
-        #     except Exception as e:
-        #         with open('log.txt', 'a') as f:
-        #             f.write(e)
-
-@bot.message_handler(commands=['24'])
+        
+@bot.message_handler(commands=['delete'])
 def foo(message):
-    bot.send_message(message.chat.id, 'Сейчас вышлю посты за последние 24 часа!')                               
+    if VIDEOS_FOR_DELETE:
+        for _ in VIDEOS_FOR_DELETE:
+            bot.send_message(message.chat.id, _)
+        
+        try:
+            delete_videos(VIDEOS_FOR_DELETE)
+        except Exception as e:
+            pass
 
 
 bot.polling(non_stop=True)

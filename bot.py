@@ -1,7 +1,9 @@
 import datetime
 
 time = '1644475704'
-yesterday = str(int(time)-24*60*60)
+yesterday = str(int(time)+17*60*60)
 
-print((datetime.datetime.utcfromtimestamp(int(time)).strftime('%Y-%m-%d %H:%M:%S')))
-print((datetime.datetime.utcfromtimestamp(int(yesterday)).strftime('%Y-%m-%d %H:%M:%S')))
+
+first = datetime.datetime.utcfromtimestamp(int(time))
+second = datetime.datetime.utcfromtimestamp(int(yesterday))
+print(str(second))
