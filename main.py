@@ -60,7 +60,7 @@ def get_day_from_unix(time: str):
 
 
 def is_post_today(date):
-    """Проверяет, совпадает ли дата поста с текущей"""
+    """Проверяет, совпадает ли дата поста с текущей или пост сделан вчера в период с 22 до 00"""
     if str(datetime.datetime.now().day) == str(date)[8:10]:
         return True
     return int(datetime.datetime.now().day)-1 == int(str(date)[8:10]) and \
@@ -80,8 +80,6 @@ def main():
     for i in range(1, 5):
         date = datetime.datetime.utcfromtimestamp(int(data[i]['date']+3*60*60))
         
-        # if (int(time.time())-int(data[i]['date']))/60/60 <= 24:
-
         if is_post_today(date):
             text = data[i]['text']
             photo_links, video_links = give_phtVd_links(data[i]['attachments'])
