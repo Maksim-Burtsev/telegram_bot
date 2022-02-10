@@ -104,7 +104,6 @@ bot = telebot.TeleBot(TEST_TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "<kzdjisfjdl ")
     text_list, photo_list, video_list = main()
     for i in range(len(text_list)):
         bot.send_message(message.chat.id, text_list[i])
@@ -127,13 +126,14 @@ def start(message):
 @bot.message_handler(commands=['delete'])
 def foo(message):
     if VIDEOS_FOR_DELETE:
-        for _ in VIDEOS_FOR_DELETE:
-            bot.send_message(message.chat.id, _)
-        
         try:
             delete_videos(VIDEOS_FOR_DELETE)
         except Exception as e:
             pass
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    bot.send_message(message.chat.id, '/start - получить посты\n/delete - удалить все ненужные посты с сервера')
 
 
 bot.polling(non_stop=True)
