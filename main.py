@@ -5,11 +5,7 @@ import datetime
 import os
 import telebot
 from telebot import types
-from config import TEST_TOKEN
-
-TOKEN = '5043259134:AAGSDHayOt-veEj_0MU5cQTX7ZveqjiT2-8'
-VK_TOKEN = '75068529750685297506852958757c7f22775067506852914ebcb3cdcaa45f57558dc20'
-TEST_TOKEN = '5291208463:AAEokJAK6ISX7TiwJ4pBYZKoShUR3kKP3AI'
+from config import TEST_TOKEN, VK_TOKEN, TOKEN
 
 VIDEOS_FOR_DELETE = []
 
@@ -129,13 +125,14 @@ def start(message):
 @bot.message_handler(commands=['delete'])
 def foo(message):
     if VIDEOS_FOR_DELETE:
-        for _ in VIDEOS_FOR_DELETE:
-            bot.send_message(message.chat.id, _)
-        
         try:
             delete_videos(VIDEOS_FOR_DELETE)
         except Exception as e:
             pass
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    bot.send_message(message.chat.id, '/start - получить посты\n/delete - удалить все ненужные посты с сервера')
 
 
 bot.polling(non_stop=True)
