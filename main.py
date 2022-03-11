@@ -1,18 +1,25 @@
-import requests
-import youtube_dl
-import datetime
 import os
+import requests
+import datetime
+from dotenv import load_dotenv
+
+import youtube_dl
 import telebot
 from telebot import types
 
-from config import TEST_TOKEN, VK_TOKEN, TOKEN, VERSION, DOMAIN, LINK_1, LINK_2
+
+load_dotenv()
+TOKEN = os.getenv('VK_TOKEN')
+VERSION = os.getenv('VERSION')
+DOMAIN = os.getenv('DOMAIN')
+LINK_1 = os.getenv('LINK_1')
+LINK_2 = os.getenv('LINK_2')
+TEST_TOKEN = os.getenv('TEST_TOKEN')
 
 VIDEOS_FOR_DELETE = []
 
-TOKEN = VK_TOKEN
 
-
-def delete_videos(video_list: list):
+def delete_videos(video_list: list) -> None:
     """Удаляет из текущей директории все скаченные видео"""
     if video_list:
         for video in video_list:
